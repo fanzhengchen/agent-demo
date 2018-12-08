@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ pom.xml
+  ~ Copyright 2018 Qunhe Tech, all rights reserved.
+  ~ Qunhe PROPRIETARY/CONFIDENTIAL, any form of usage is subject to approval.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>agent-all</artifactId>
+        <groupId>com.qunhe.instdeco</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>agent</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <finalName>agent</finalName>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDirectory>${project.basedir}/lib</outputDirectory>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.qunhe.instdeco.Agent</mainClass>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Can-Refine-Classes>true</Can-Refine-Classes>
+                            <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                            <Premain-Class>
+                                com.qunhe.instdeco.Agent
+                            </Premain-Class>
+                        </manifestEntries>
+                    </archive>
+
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
