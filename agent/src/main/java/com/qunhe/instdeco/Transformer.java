@@ -46,19 +46,11 @@ public class Transformer implements ClassFileTransformer {
 
     private byte[] mockClass(ClassLoader loader, String className, byte[] classfileBuffer)
             throws Exception {
-        mClassPool = ClassPool.getDefault();
-        mClassPool.insertClassPath(new LoaderClassPath(loader));
-        System.out.println("mocking " + loader + " " + className);
-        CtClass targetClass = mClassPool.getCtClass(className);
+        ClassPool classPool = ClassPool.getDefault();
+        classPool.insertClassPath(new LoaderClassPath(loader));
+        CtClass targetClass = classPool.getCtClass(className);
         ClassLoader classLoader = targetClass.getClass().getClassLoader();
 
-        System.out.println("realLoader " + classLoader);
-        CtMethod[] ctMethods = targetClass.getDeclaredMethods();
-        System.out.println("size " + ctMethods.length + " " + targetClass.toBytecode().length +
-                " " + classfileBuffer.length);
-        for (CtMethod ctMethod : ctMethods) {
-            System.out.println("ctMethod " + ctMethod);
-        }
         targetClass.defrost();
         CtMethod ctMethod = targetClass.getDeclaredMethod("person");
         String packageName = "com.qunhe.instdeco";
