@@ -50,8 +50,9 @@ public class Transformer implements ClassFileTransformer {
         classPool.insertClassPath(new LoaderClassPath(loader));
         CtClass targetClass = classPool.getCtClass(className);
         ClassLoader classLoader = targetClass.getClass().getClassLoader();
-
         targetClass.defrost();
+
+        targetClass.getDeclaredMethods();
         CtMethod ctMethod = targetClass.getDeclaredMethod("person");
         String packageName = "com.qunhe.instdeco";
         ctMethod.setBody("{" +

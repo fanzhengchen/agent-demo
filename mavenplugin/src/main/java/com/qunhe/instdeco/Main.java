@@ -18,7 +18,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 @Mojo(name = "analysis")
 public class Main extends AbstractMojo {
 
-    private static final AnalysisByteCodeUtil mByteCodeUtil = new AnalysisByteCodeUtil();
+    String test;
 
     @Parameter
     private String rootDir;
@@ -28,7 +28,6 @@ public class Main extends AbstractMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        getLog().info("=========");
         getLog().info("method trace");
 
         try {
@@ -39,24 +38,12 @@ public class Main extends AbstractMojo {
     }
 
     private void run() throws Exception {
-        if (rootDir == null) {
-            rootDir = mByteCodeUtil.getProjectRootDir();
-        }
-        pattern = System.getProperties().getProperty("analysis.pattern");
-
-        getLog().info("rootDir: " + rootDir + " methodPattern:" + pattern);
-        if (pattern == null) {
-            getLog().error("method pattern is null");
-            return;
-        }
-
-        getLog().info("trace begin");
-        mByteCodeUtil.analysis(rootDir, pattern);
-        getLog().info("trace end");
+        TraceAnalyser analyser = new TraceAnalyser();
     }
 
     public static void main(String[] args)throws Exception{
-        mByteCodeUtil.analysis("/Users/fanzhengchen/RenderGroup/agent-demo/spring-boot/",
-                "com/qunhe/instdeco/Person.setName:(Ljava/lang/String;)V");
+        TraceAnalyser analyser = new TraceAnalyser();
+//        analyser.trace("/home/mark/RenderGroup/diyrenderservice", "TraceAnalyser");
+        analyser.trace("/home/mark/agent-demo/mavenplugin","sssss");
     }
 }
