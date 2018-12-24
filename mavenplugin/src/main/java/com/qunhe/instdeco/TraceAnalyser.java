@@ -3,6 +3,7 @@ package com.qunhe.instdeco;
 
 import com.sun.tools.javap.JavapTask;
 import io.netty.util.internal.StringUtil;
+import org.apache.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,7 +15,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -170,7 +170,10 @@ public class TraceAnalyser {
             }
         });
 
-        System.out.println(count);
+        LOG.info("total nodes: " + count);
+        LOG.info("called: " + callGraph.getNumEdges());
+
+        callGraph.dfs(1, 0);
     }
 
 }

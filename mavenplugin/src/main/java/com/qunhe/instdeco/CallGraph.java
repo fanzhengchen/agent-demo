@@ -1,5 +1,10 @@
 package com.qunhe.instdeco;
 
+import org.apache.log4j.Logger;
+
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 
 /**
@@ -8,12 +13,16 @@ import java.util.HashMap;
  */
 public class CallGraph {
 
+    private static final Logger LOG = Logger.getLogger(CallGraph.class);
+
     private static final int SIZE = 16;
 
     private HashMap<String, Integer> mHash = new HashMap<>();
     private Integer count = 0;
     private Node[] edges = new Node[SIZE];
     private static final Node NULL = new Node("", 0);
+    private PrintStream mPrintStream;
+    private int numEdges = 0;
 
     private static class Node {
         private String pattern;
@@ -41,14 +50,24 @@ public class CallGraph {
     private Node start = NULL;
 
     public CallGraph(String initialPattern) {
+        this(initialPattern, System.out);
+    }
+
+    public CallGraph(String initialPattern, PrintStream outputStream) {
         start = new Node(initialPattern, getId(initialPattern), NULL);
+        mPrintStream = outputStream;
     }
 
 
     public void add(String from, String to) {
         Integer u = getId(from);
         Integer v = getId(to);
+
+        LOG.info("========================");
+        LOG.info(from + "---:  " + u);
+        LOG.info(to + "---:  " + v);
         Node node = new Node(to, v, edges[u].next);
+        ++numEdges;
         edges[u].next = node;
     }
 
@@ -58,7 +77,7 @@ public class CallGraph {
         }
         ++count;
         int size = edges.length;
-        if (size >= count) {
+        if (size <= count) {
             Node[] newEdges = new Node[size << 1];
             System.arraycopy(edges, 0, newEdges, 0, size);
             edges = newEdges;
@@ -68,4 +87,27 @@ public class CallGraph {
         return count;
     }
 
+    public void dfs(int u, int dep) {
+        if (dep > 4) {
+            return;
+        }
+        printSpace(dep);
+        mPrintStream.println(dep + " " + edges[u].pattern);
+        for (Node v = edges[u]; v != NULL; v = v.next) {
+            if (u != v.vertex) {
+                dfs(v.vertex, dep + 1);
+            }
+        }
+
+    }
+
+    private void printSpace(int n) {
+        for (int i = 1; i <= n; ++i) {
+            mPrintStream.print(" ");
+        }
+    }
+
+    public int getNumEdges() {
+        return numEdges;
+    }
 }

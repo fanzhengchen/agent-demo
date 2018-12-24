@@ -43,7 +43,8 @@ public class Main extends AbstractMojo {
 
     public static void main(String[] args)throws Exception{
         TraceAnalyser analyser = new TraceAnalyser();
-//        analyser.trace("/home/mark/RenderGroup/diyrenderservice", "TraceAnalyser");
-        analyser.trace("/home/mark/agent-demo/mavenplugin","sssss");
+        analyser.trace("/home/mark/RenderGroup/diyrenderservice", "com/qunhe/instdeco/diy/drs/auto/autocamera/AutoCameraUtils.getFurnitureWeightInSight:(Lcom/qunhe/nova/gene/camera/PinholeCamera;Lcom/qunhe/diybe/module/designmodel/element/Room;Ljava/util/Map;Z)F");
+//        analyser.trace("/home/mark/agent-demo/mavenplugin","java/lang/Object.\"<init>\":()V");
+
     }
 }
