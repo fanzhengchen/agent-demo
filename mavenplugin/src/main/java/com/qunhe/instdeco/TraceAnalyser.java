@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,6 +24,8 @@ import java.util.regex.Pattern;
  */
 public class TraceAnalyser {
 
+    private static final Logger LOG = Logger.getLogger(TraceAnalyser.class.getName());
+
     private static final Pattern CLASS_NAME_PATTERN = Pattern.compile(
             "(?<=Compiled[\\s]from[\\s]\")([\\w]+)(?=[.]java)");
 
@@ -30,7 +33,7 @@ public class TraceAnalyser {
             "(?<=class\\s)([\\w.$]+)(?=\\s)");
 
     private static final Pattern METHOD_CALLED_PATTERN = Pattern.compile(
-            "(?<=//\\sMethod\\s)([\\w.:()\\[;/]+)"
+            "(?<=//\\sMethod\\s)([\\w.:()\\[;/$\"\"<>]+)"
     );
 
     private static final Pattern METHOD_DESCRIPTOR_PATTERN = Pattern.compile(
@@ -68,7 +71,7 @@ public class TraceAnalyser {
                 try {
                     String fullPath = file.toString();
                     if (fullPath.endsWith(".class")) {
-                        System.out.println("fullPath: " + fullPath);
+                        LOG.info("fullPath: " + fullPath);
                         JavapTask task = new JavapTask();
                         String[] args = { "-s", "-private", "-c", fullPath };
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -127,6 +130,7 @@ public class TraceAnalyser {
                                             calledPattern = classSignature + "." + calledPattern;
                                         }
                                         System.out.println("called pattern: " + calledPattern);
+                                        callGraph.add(calledPattern, signature);
 
                                     }
                                 } else if (line.matches("^\\s+$")) {
