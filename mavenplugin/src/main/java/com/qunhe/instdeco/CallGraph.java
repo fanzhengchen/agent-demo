@@ -49,23 +49,22 @@ public class CallGraph {
 
     private Node start = NULL;
 
-    public CallGraph(String initialPattern) {
-        this(initialPattern, System.out);
+    public CallGraph() {
+        this(System.out);
     }
 
-    public CallGraph(String initialPattern, PrintStream outputStream) {
+    public CallGraph(PrintStream printStream) {
+        mPrintStream = printStream;
+    }
+
+    public void init(String initialPattern) {
         start = new Node(initialPattern, getId(initialPattern), NULL);
-        mPrintStream = outputStream;
     }
 
 
     public void add(String from, String to) {
         Integer u = getId(from);
         Integer v = getId(to);
-
-        LOG.info("========================");
-        LOG.info(from + "---:  " + u);
-        LOG.info(to + "---:  " + v);
         Node node = new Node(to, v, edges[u].next);
         ++numEdges;
         edges[u].next = node;
@@ -88,11 +87,11 @@ public class CallGraph {
     }
 
     public void dfs(int u, int dep) {
-        if (dep > 4) {
+        if (dep > 10) {
             return;
         }
         printSpace(dep);
-        mPrintStream.println(dep + " " + edges[u].pattern);
+        mPrintStream.println(dep + " -- " + edges[u].pattern);
         for (Node v = edges[u]; v != NULL; v = v.next) {
             if (u != v.vertex) {
                 dfs(v.vertex, dep + 1);
@@ -103,7 +102,7 @@ public class CallGraph {
 
     private void printSpace(int n) {
         for (int i = 1; i <= n; ++i) {
-            mPrintStream.print(" ");
+            mPrintStream.print("  ");
         }
     }
 

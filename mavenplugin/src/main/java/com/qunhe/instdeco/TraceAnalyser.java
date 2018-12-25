@@ -1,6 +1,8 @@
 package com.qunhe.instdeco;
 
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.sun.tools.javap.JavapTask;
 import io.netty.util.internal.StringUtil;
 import org.apache.log4j.Logger;
@@ -13,8 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,14 +50,16 @@ public class TraceAnalyser {
     }
 
 
-    public void trace(String rootDir, String pattern) throws Exception {
+    public void trace(String rootDir, String classPattern, String methodPattern) throws Exception {
 
         String path = rootDir.endsWith("/") ? rootDir + "target/classes" : rootDir + "/target" +
                 "/classes";
 
-        CallGraph callGraph = new CallGraph(pattern);
+        CallGraph callGraph = new CallGraph();
 
         count = 0;
+
+        Set<Integer> startingVertices = Sets.newHashSet();
 
         Files.walkFileTree(Paths.get(path), new FileVisitor<Path>() {
             @Override
@@ -99,7 +103,6 @@ public class TraceAnalyser {
                                 }
                                 ++tag;
                             } else {
-//                                System.out.println(line);
                                 if (line.endsWith("Code:")) {
                                     Matcher matcher = METHOD_NAME_PATTERN.matcher(penultimate);
                                     if (matcher.find()) {
@@ -117,7 +120,7 @@ public class TraceAnalyser {
                                     }
                                     signature = classSignature + "." + methodName + ":" +
                                             methodSignature;
-                                    System.out.println("signature " + signature);
+                                    LOG.info("signature " + signature);
                                 } else if (!StringUtil.isNullOrEmpty(signature)) {
                                     /**
                                      * method body
@@ -129,7 +132,12 @@ public class TraceAnalyser {
                                         if (!temp[0].contains(".")) {
                                             calledPattern = classSignature + "." + calledPattern;
                                         }
-                                        System.out.println("called pattern: " + calledPattern);
+                                        if (calledPattern.contains(classPattern) && calledPattern.contains(
+                                                methodPattern)) {
+                                            Integer vertex = callGraph.getId(calledPattern);
+                                            LOG.info("starting: " + vertex + " " + calledPattern);
+                                            startingVertices.add(vertex);
+                                        }
                                         callGraph.add(calledPattern, signature);
 
                                     }
@@ -173,7 +181,11 @@ public class TraceAnalyser {
         LOG.info("total nodes: " + count);
         LOG.info("called: " + callGraph.getNumEdges());
 
-        callGraph.dfs(1, 0);
+        if (!startingVertices.isEmpty()) {
+            for (Integer vertex : startingVertices) {
+                callGraph.dfs(vertex, 0);
+            }
+        }
     }
 
 }
