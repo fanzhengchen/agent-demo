@@ -44,6 +44,9 @@ public class Main extends AbstractMojo {
         String classPattern = properties.getProperty("analysis.classPattern");
         String methodPattern = properties.getProperty("analysis.methodPattern");
         TraceAnalyser analyser = new TraceAnalyser();
+        System.out.println("rootDir " + rootDir);
+        System.out.println("classPattern " + classPattern);
+        System.out.println("methodPattern " + methodPattern);
         analyser.trace(rootDir, classPattern, methodPattern);
     }
 
