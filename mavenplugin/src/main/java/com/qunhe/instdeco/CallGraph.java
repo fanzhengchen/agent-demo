@@ -87,7 +87,7 @@ public class CallGraph {
     }
 
     public void dfs(int u, int dep) {
-        if (dep > 10) {
+        if (dep > 20) {
             return;
         }
         printSpace(dep);
