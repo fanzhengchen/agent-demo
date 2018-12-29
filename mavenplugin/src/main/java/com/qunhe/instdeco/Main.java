@@ -12,6 +12,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import java.util.Properties;
+
 /**
  * @author shengxun
  */
@@ -24,7 +26,7 @@ public class Main extends AbstractMojo {
     private String rootDir;
 
     @Parameter
-    private String pattern;
+    private String classPattern;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -38,13 +40,17 @@ public class Main extends AbstractMojo {
     }
 
     private void run() throws Exception {
+        Properties properties = System.getProperties();
+        String classPattern = properties.getProperty("analysis.classPattern");
+        String methodPattern = properties.getProperty("analysis.methodPattern");
         TraceAnalyser analyser = new TraceAnalyser();
+        analyser.trace(rootDir, classPattern, methodPattern);
     }
 
     public static void main(String[] args) throws Exception {
         TraceAnalyser analyser = new TraceAnalyser();
-        analyser.trace("/home/mark/RenderGroup/panobizservice",
+        analyser.trace("/home/mark/RenderGroup/diyrenderservice",
                 "DesignSnapshotServiceClient",
-                "getSnapshotByPicIdsAndStatus");
+                "getSnapshot");
     }
 }

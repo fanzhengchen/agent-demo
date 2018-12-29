@@ -103,6 +103,7 @@ public class TraceAnalyser {
                                 }
                                 ++tag;
                             } else {
+                                System.out.println(line);
                                 if (line.endsWith("Code:")) {
                                     Matcher matcher = METHOD_NAME_PATTERN.matcher(penultimate);
                                     if (matcher.find()) {
