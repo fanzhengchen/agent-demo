@@ -18,5 +18,10 @@ public class CommandProcessor implements CommandLineRunner {
     public void run(final String... args) throws Exception {
         System.out.println("running");
         Integer integer = new Integer(3);
+
+        FooService fooService = new FooServiceImpl();
+
+        String text = fooService.foo();
+        System.out.println(text);
     }
 }

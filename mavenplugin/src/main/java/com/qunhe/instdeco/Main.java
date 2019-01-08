@@ -12,6 +12,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -52,8 +53,12 @@ public class Main extends AbstractMojo {
 
     public static void main(String[] args) throws Exception {
         TraceAnalyser analyser = new TraceAnalyser();
-        analyser.trace("/home/mark/RenderGroup/diyrenderservice",
-                "DesignSnapshotServiceClient",
-                "getSnapshot");
+        Map<String, String> env = System.getenv();
+        String homePath = env.get("HOME");
+        String dir = System.getProperty("user.dir");
+//        analyser.trace(homePath + "/RenderGroup/diyrenderservice",
+//                "DesignSnapshotServiceClient",
+//                "getSnapshot");
+        analyser.trace(dir +"/spring-boot","x","Y");
     }
 }

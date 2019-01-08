@@ -83,6 +83,7 @@ public class TraceAnalyser {
                         task.handleOptions(args);
                         task.run();
                         String classCode = baos.toString();
+                        System.out.println(classCode);
                         String[] codes = classCode.split("\\n");
                         String className = null;
                         String classSignature = null;

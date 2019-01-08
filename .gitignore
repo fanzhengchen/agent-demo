@@ -2,5 +2,7 @@
 *.iml
 *target
 .gitignore
+logs
 agent/target/
 spring-boot/target/
+.DS_Store
